@@ -557,25 +557,41 @@ header {
   font-size: 20px;
   height: fit-content;
   color: white;
-  filter: drop-shadow(0px 0px 1px black);
   position: absolute;
-  top: 0%;
-  padding: 10px;
-  right: 0;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  top: 5px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  right: 5px;
 }
 
 .heart:active {
   transform: scale(1.2);
 }
-
-#one {
-  color: #7000FF;
-  filter: drop-shadow(0px 0px 1px #7000FF);
+.heart_not_active{
+  display: block;
 }
-
-#zero {
-  color: white;
-  filter: drop-shadow(0px 0px 1px black);
+.active-heart-image{
+  display: none;
+  width: 20px;
+  height: 20px;
+}
+#one svg {
+  display: none;
+}
+#one img{
+  display: block;
+}
+#zero svg{
+  display: block;
+}
+#zero img{
+  display: none;
 }
 
 .add_cart {

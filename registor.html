@@ -22,13 +22,16 @@
       color: white;
       background-color: #181818;
     }
-    #vihod{
+
+    #vihod {
       border-bottom-left-radius: 25px;
     }
-    #udalit{
+
+    #udalit {
       border-bottom-right-radius: 25px;
     }
-    .backend{
+
+    .backend {
       position: fixed;
       top: 20px;
       left: 20px;
@@ -41,22 +44,25 @@
       cursor: pointer;
     }
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DMCD2K8C2Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-DMCD2K8C2Y');
+  </script>
 </head>
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DMCD2K8C2Y"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-DMCD2K8C2Y');
-</script>
 <body style="background-color: #181818;">
   <img src="https://cdn0.iconfinder.com/data/icons/typicons-2/24/arrow-back-256.png" class="backend">
   <div class="user_page_block container">
     <div class="user_page">
       <div class="avatar" style="position: relative;">
-        <input type="file" id="myFile" style="outline: none; position:absolute; cursor: pointer;" name="filename" class="fli">
+        <input type="file" id="myFile" style="outline: none; position:absolute; cursor: pointer;" name="filename"
+          class="fli">
         <img src="https://cdn2.iconfinder.com/data/icons/user-interface-169/32/about-256.png" id="output" alt="">
       </div>
       <div class="user_settings_blocks">
@@ -77,7 +83,7 @@
   <script>
     let backend = document.querySelector('.backend')
     let inp_text = document.querySelector('.name_in')
-    backend.onclick =()=>{
+    backend.onclick = () => {
       location.assign("/index.html")
     }
     let inp_password = document.querySelector('.pass_in')
@@ -98,9 +104,9 @@
         let foundObject2 = arr.find(function (item) {
           return item.email === obj.email;
         });
-        if(foundObject2.image != undefined){
+        if (foundObject2.image != undefined) {
           output.src = foundObject2.image
-        }else {
+        } else {
           output.style.filter = 'invert(1)'
         }
       })
@@ -200,4 +206,5 @@
     image(file, output)
   </script>
 </body>
+
 </html>

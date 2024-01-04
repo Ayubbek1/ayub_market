@@ -114,6 +114,9 @@
 }
 
 @media only screen and (max-width: 950px) {
+    .logo_animka{
+        max-width: 280px;
+    }
     .may_kab {
         display: none;
         width: 100%;

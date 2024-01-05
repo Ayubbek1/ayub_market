@@ -19,6 +19,7 @@ let cart_hover = document.querySelector('.cart_hover')
 let filter_grid = document.querySelector('.filter_grid')
 let amount_phone = document.querySelector('.amount_phone')
 let no_tovar = document.querySelector('.no_tovar')
+let product_img = document.querySelector(".njj")
 let months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 let right_1 = 0
 let right_2 = 0
@@ -493,7 +494,6 @@ async function reload(place, item) {
     </div>
   </div>
 </div>`
-  let product_img = document.querySelector(".cart_page_left img")
   let product_name = document.querySelector(".cart_page_mainfo h2")
   let rate = document.querySelector(".cart_page_rating p")
   let heart = document.querySelectorAll('.heart')
@@ -532,6 +532,7 @@ async function reload(place, item) {
               return element.id == elem.id
             })
             third_object = finded
+            product_img.src = finded.media[0]
             let countsit = document.querySelectorAll('.countsit')
             countsit.forEach(it => {
               it.onclick = () => {
@@ -589,6 +590,7 @@ async function reload(place, item) {
       }else {
         green_prices.style.display = 'none'
       }
+      product_img.src = third_object.media[0]
     }
   });
   let imgs = document.querySelectorAll("img")

@@ -16,6 +16,7 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 ::-webkit-scrollbar {
   display: none;
 }
@@ -36,29 +37,37 @@ a {
   gap: 10px;
   align-items: center;
 }
-.menu_child img{
-  width: 26.79px; 
+
+.menu_child img {
+  width: 26.79px;
   height: auto
 }
-.menu_child .active_phot{
+
+.menu_child .active_phot {
   display: none;
 }
-.active-bottom-menu{
-  fill: #7000ff!important;
-  color: #7000FF!important;
+
+.active-bottom-menu {
+  fill: #7000ff !important;
+  color: #7000FF !important;
 }
-.amount_phone{
+
+.amount_phone {
   display: none;
 }
-.may_kab{
+
+.may_kab {
   display: none;
 }
-.active-bottom-menu .first-not-active{
+
+.active-bottom-menu .first-not-active {
   display: none;
 }
-.active-bottom-menu .active_phot{
-  display: block!important;
+
+.active-bottom-menu .active_phot {
+  display: block !important;
 }
+
 #notification {
   display: none;
   position: fixed;
@@ -76,9 +85,11 @@ a {
   font-size: 14px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
-.adapt_980_anti{
+
+.adapt_980_anti {
   display: none;
 }
+
 header {
   font-size: 13px;
   justify-content: space-between;
@@ -86,9 +97,11 @@ header {
   background: #F2F4F7;
   padding-right: 10px;
 }
-.header-phone{
+
+.header-phone {
   display: none;
 }
+
 .gray_bg {
   background: #F2F4F7;
 
@@ -335,12 +348,15 @@ header {
   position: relative;
   padding: 3px 0;
 }
-.onsale h2{
+
+.onsale h2 {
   position: relative;
 }
-.menu_phone{
+
+.menu_phone {
   display: none;
 }
+
 .line_animation::after {
   content: '';
   transition: 1s ease;
@@ -360,7 +376,8 @@ header {
 .swiper {
   border-radius: 10px;
 }
-.swiper2{
+
+.swiper2 {
   display: none;
   overflow: hidden;
 }
@@ -576,24 +593,30 @@ header {
 .heart:active {
   transform: scale(1.2);
 }
-.heart_not_active{
+
+.heart_not_active {
   display: block;
 }
-.active-heart-image{
+
+.active-heart-image {
   display: none;
   width: 20px;
   height: 20px;
 }
+
 #one svg {
   display: none;
 }
-#one img{
+
+#one img {
   display: block;
 }
-#zero svg{
+
+#zero svg {
   display: block;
 }
-#zero img{
+
+#zero img {
   display: none;
 }
 
@@ -900,7 +923,8 @@ footer {
   cursor: pointer;
   border-radius: 50%;
 }
-.green_prices{
+
+.green_prices {
   position: absolute;
   color: #7000ff;
   font-size: 12px;
@@ -1098,7 +1122,21 @@ footer {
   display: flex;
   justify-content: space-between;
 }
-.images_third_page{
+
+.may_kab {
+  display: none;
+}
+
+.kabinka {
+  width: 100%;
+  margin-bottom: 55px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  display: none;
+}
+
+.images_third_page {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -1106,6 +1144,7 @@ footer {
   width: fit-content;
   max-width: 85px;
 }
+
 .delivery_info {
   display: flex;
   gap: 30px;
@@ -1126,7 +1165,7 @@ footer {
 
 .price_info {
   display: flex;
-  position:relative;
+  position: relative;
   align-items: center;
   gap: 10px;
 }
@@ -1226,12 +1265,14 @@ footer {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .violet {
   color: #7000FF;
   border: 1px #7913ff dashed;
   padding: 3px;
   cursor: pointer;
 }
+
 .jgf {
   display: flex;
   justify-content: space-between;
@@ -1649,19 +1690,24 @@ a {
   background: #7913ffd3;
   cursor: pointer;
 }
-.lyo{
+
+.lyo {
   display: none;
 }
+
 .w-kor {
   width: 350px;
   word-wrap: break-word;
 }
-.kategories-phone{
+
+.kategories-phone {
   display: none;
 }
-.filter-top{
+
+.filter-top {
   display: none;
 }
+
 .avatar {
   max-width: 300px;
   display: flex;
@@ -1752,12 +1798,14 @@ a {
   width: 100%;
   justify-content: space-between;
 }
-.margt{
+
+.margt {
   width: 100%;
   text-align: center;
   margin: 100px 0;
 }
-.btn-double-block .bad-btn{
+
+.btn-double-block .bad-btn {
   background: rgb(235, 22, 65);
   border: none;
   outline: none;
@@ -1769,7 +1817,7 @@ a {
 }
 
 /* animka */
-.animka{
+.animka {
   width: 100%;
   height: 100vh;
   position: fixed;
@@ -1782,18 +1830,25 @@ a {
   justify-content: center;
   align-items: center;
 }
-.logo_animka{
+
+.logo_animka {
   width: 0%;
   max-width: 500px;
   max-height: 400px;
   height: auto;
   animation: animt linear 0.3s forwards;
 }
+
 @keyframes animt {
-  0%{
+  0% {
     width: 0%;
   }
-  100%{
+
+  100% {
     width: 80%;
   }
+}
+.top-chat,
+.bottom-chat {
+    min-height: 90px;
 }

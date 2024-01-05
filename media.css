@@ -28,11 +28,6 @@
         padding: 20px;
         border: none;
     }
-
-    .njj {
-        width: 100% !important;
-    }
-
     .cart_page_left {
         width: 80%;
     }
@@ -41,6 +36,9 @@
 @media only screen and (max-width: 1100px) {
     .adapt_1100 {
         display: none;
+    }
+    .njj {
+        width: 90%;
     }
 
     .cart_page_mainfo h2 {
@@ -91,7 +89,14 @@
     .adapt_980 {
         display: none;
     }
-
+    
+    .cart_page_left {
+        width: 100%;
+        position: relative;
+    }
+    .images_third_page{
+        max-width: 65px;
+    }
     footer {
         flex-wrap: wrap;
         row-gap: 40px;
@@ -114,6 +119,19 @@
 }
 
 @media only screen and (max-width: 950px) {
+    .logo_animka{
+        max-width: 280px;
+    }
+    .njj {
+        max-width: 600px;
+    }
+    .njj {
+        width: 80%;
+    }
+    .cart_page_left{
+        justify-content: flex-start;
+        gap: 20px;
+    }
     .may_kab {
         display: none;
         width: 100%;
@@ -185,11 +203,6 @@
         flex-direction: column;
         gap: 50px;
         margin-top: 40px;
-    }
-
-    .cart_page_left {
-        position: inherit;
-        max-width: 420px;
     }
 
     .title_third {
@@ -533,7 +546,6 @@
         justify-content: flex-start;
     }
 
-    .top-chat,
     .bottom-chat {
         height: 60px;
     }
@@ -582,7 +594,10 @@
         width: 60%;
         font-size: 12px;
     }
-
+    .cart_page_left{
+        justify-content: space-between;
+        gap: 0px;
+    }
     .price_block {
         width: 100px;
     }
@@ -665,8 +680,13 @@
 
     .top-chat,
     .bottom-chat {
+        width: 100%;
         border-radius: 0;
         padding: 0 10px;
+    }
+    .white_body{
+        padding: 0;
+        height: 100vh;
     }
 
     .message-block {
@@ -739,10 +759,6 @@
 }
 
 @media only screen and (max-width: 340px) {
-    .onsale_item_img {
-        height: 200px;
-    }
-
     .onsale_main {
         grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     }
@@ -753,5 +769,16 @@
 
     .filter_grid {
         grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    }
+}
+@media only screen and (max-width: 320px) {
+    .onsale_item_img {
+        height: 200px;
+    }
+    .images_third_page{
+        display: none!important;
+    }
+    .njj{
+        width: 100%;
     }
 }

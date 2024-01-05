@@ -16,6 +16,9 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+::-webkit-scrollbar {
+  display: none;
+}
 
 a {
   text-decoration: none;
@@ -895,10 +898,17 @@ footer {
 .art-mess {
   width: 40px;
   cursor: pointer;
-  background-color: white;
   border-radius: 50%;
 }
-
+.green_prices{
+  position: absolute;
+  color: #7000ff;
+  font-size: 12px;
+  z-index: 3;
+  bottom: -90%;
+  border-radius: 5px;
+  display: none;
+}
 
 
 .mess-left {
@@ -1084,8 +1094,18 @@ footer {
 .cart_page_left {
   position: sticky;
   top: 10px;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
 }
-
+.images_third_page{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  width: fit-content;
+  max-width: 85px;
+}
 .delivery_info {
   display: flex;
   gap: 30px;
@@ -1106,6 +1126,7 @@ footer {
 
 .price_info {
   display: flex;
+  position:relative;
   align-items: center;
   gap: 10px;
 }
@@ -1745,4 +1766,34 @@ a {
   border-radius: 4px;
   padding: 10px 0px;
   width: 48%;
+}
+
+/* animka */
+.animka{
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  display: flex;
+  transition: 0.5s ease-in;
+  left: 0;
+  z-index: 1200000000000;
+  background-color: #7000FF;
+  justify-content: center;
+  align-items: center;
+}
+.logo_animka{
+  width: 0%;
+  max-width: 500px;
+  max-height: 400px;
+  height: auto;
+  animation: animt linear 0.3s forwards;
+}
+@keyframes animt {
+  0%{
+    width: 0%;
+  }
+  100%{
+    width: 80%;
+  }
 }

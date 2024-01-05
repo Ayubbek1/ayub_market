@@ -33,34 +33,46 @@ let like = undefined
 let arr_liked = [] //массив с любимыми товарами
 let arr_basket = []
 let check = []
-if (localStorage.getItem("Liked") != null || localStorage.getItem("Liked") != undefined) {
-  arr_liked = JSON.parse(localStorage.getItem("Liked"))
+console.log(localStorage.getItem('account'));
+let obj_acc = undefined
+if (localStorage.getItem("account") != 'havent' && localStorage.getItem("account") != null) {
+  obj_acc = JSON.parse(localStorage.getItem('account'))
 }
-if (localStorage.getItem("basket") != null || localStorage.getItem("basket") != undefined) {
-  arr_basket = JSON.parse(localStorage.getItem("basket"))
-  showed_basket(arr_basket, check)
-}
-fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
+fetch('https://ayub-market-default-rtdb.firebaseio.com/user.json')
   .then(res => res.json())
   .then(data => {
-    for (let item of data.goods) {
-      item.price = parseInt(item.price * rub)
-      if (item.salePercentage == 0) {
-        item.salePercentage = 72
-      }
-      if (item.isBlackFriday == true) {
-        spy_liked(item)
-        reload(onsale_main, item)
-      }
-      if (item.rating == 5) {
-        spy_liked(item)
-        reload(onsale_main2, item)
-      }
-    }
-    basket()
-    addToFav()
+    console.log(data);
+    let foundObject = data.find(function (item) {
+      return item.email === obj_acc.email;
+    });
+    arr_liked = JSON.parse(foundObject.liked)
+    arr_basket = JSON.parse(foundObject.basket)
+    obj_acc = foundObject
+    localStorage.setItem('account', JSON.stringify(obj_acc))
+    showed_basket(arr_basket, check)
   })
-
+setTimeout(() => {
+  fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
+    .then(res => res.json())
+    .then(data => {
+      for (let item of data.goods) {
+        item.price = parseInt(item.price * rub)
+        if (item.salePercentage == 0) {
+          item.salePercentage = 72
+        }
+        if (item.isBlackFriday == true) {
+          spy_liked(item)
+          reload(onsale_main, item)
+        }
+        if (item.rating == 5) {
+          spy_liked(item)
+          reload(onsale_main2, item)
+        }
+      }
+      basket()
+      addToFav()
+    })
+}, 3000)
 function spy_liked(obj) {
   let foundObject = arr_liked.find(ob => {
     return ob.id === obj.id;
@@ -97,7 +109,7 @@ function addToFav() {
               for (let item of fresh) {
                 item.id = "one"
               }
-              localStorage.setItem('Liked', JSON.stringify(arr_liked))
+              change_like_sever(arr_liked)
               //
             } else {
               for (let item of data.goods) {
@@ -115,7 +127,7 @@ function addToFav() {
               for (let item of fresh) {
                 item.id = "zero"
               }
-              localStorage.setItem('Liked', JSON.stringify(arr_liked))
+              change_like_sever(arr_liked)
               //
             }
           } else {
@@ -234,10 +246,15 @@ let input_chat = document.querySelector('.inputforchat')
 let chat_block = document.querySelector('.chat_block')
 // 
 let answer = ''
+let apiKey = ''
+fetch('https://api-key-b3e23-default-rtdb.firebaseio.com/user.json')
+  .then(res => res.json())
+  .then(data => {
+    apiKey = data.Api_key
+  })
 async function askQuestion(question) {
-  const apiKey = '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';
   const prompt = `Q: ${question}\nA:`;
-  const response = await fetch('https://api.openai.com/v1/engines/text-davinci-003/completions', {
+  const response = await fetch(`https://api.openai.com/v1/engines/text-davinci-003/completions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -249,6 +266,7 @@ async function askQuestion(question) {
     }),
   });
   const data = await response.json();
+  console.log(data);
   answer = data.choices[0].text.trim()
   if (answer != undefined) {
     chat_block.innerHTML += `<div class="message-block">
@@ -294,9 +312,12 @@ function chatting() {
   if (input_chat.value != '') {
     let m = 'https://cdn1.iconfinder.com/data/icons/sport-94/550/volley-256.png'
     let objt = JSON.parse(localStorage.getItem('account'))
+    let nope = ''
     if (objt.image != 'https://cdn2.iconfinder.com/data/icons/user-interface-169/32/about-256.png' && objt.image != undefined) {
       m = objt.image
+      nope = 'invert(0)'
     } else {
+      nope = 'invert(1)'
       m = 'https://cdn2.iconfinder.com/data/icons/user-interface-169/32/about-256.png'
     }
     chat_block.scrollTop = chat_block.scrollHeight
@@ -305,7 +326,7 @@ function chatting() {
       <p>You</p>
       ${input_chat.value}
     </div>
-    <img src="${m}" alt="" class="art-mess">
+    <img src="${m}" class="art-mess" style="filter: ${nope};">
   </div>`
     chat_block.lastElementChild.scrollIntoView({
       behavior: "smooth",
@@ -389,15 +410,15 @@ let leave_phone_ac = document.querySelector('.leave-phone-ac')
 if (localStorage.getItem("account") != 'havent' && localStorage.getItem("account") != null) {
   let obj_acc = JSON.parse(localStorage.getItem('account'))
   fetch('https://ayub-market-default-rtdb.firebaseio.com/user.json')
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        let foundObject = data.find(function (item) {
-          return item.email === obj_acc.email;
-        });
-        obj_acc = foundObject
-        localStorage.setItem('account', JSON.stringify(obj_acc))
-      })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      let foundObject = data.find(function (item) {
+        return item.email === obj_acc.email;
+      });
+      obj_acc = foundObject
+      localStorage.setItem('account', JSON.stringify(obj_acc))
+    })
   let lo = document.getElementById("lo")
   lo.style.display = 'none'
   log_in.onclick = () => {
@@ -439,6 +460,7 @@ function loged(arr) {
     }
   }
 }
+let green_prices = document.querySelector('.green_prices')
 async function reload(place, item) {
   let colors = Object.values(item.colors)
   colors = JSON.stringify(colors)
@@ -492,6 +514,7 @@ async function reload(place, item) {
       });
     })
     elem.onclick = () => {
+      let images_third_page = document.querySelector('.images_third_page')
       main_search.value = ''
       phone_search.value = ''
       for (let item of menu_children) {
@@ -515,16 +538,33 @@ async function reload(place, item) {
                 count_in_third_page(it.innerHTML)
               }
             });
+            green_prices.innerHTML = `${Math.ceil(third_object.price / 100 * (100 - third_object.salePercentage)).toLocaleString()} сум/ед`
             let title_third = document.querySelector('.title_third')
             title_third.innerHTML = `${third_object.title}`
             let inp_basket2 = document.querySelector('.inp_basket2')
             inp_basket2.onchange = () => {
+              if (parseInt(inp_basket2.value) > 1) {
+                green_prices.style.display = 'block'
+              }else {
+                green_prices.style.display = 'none'
+              }
               if (inp_basket2.value < 1) {
                 inp_basket2.value = 1
               } else if (inp_basket2.value >= 100) {
                 inp_basket2.value = 100
               }
               prov2()
+            }
+            let imges = Object.values(finded.media)
+            images_third_page.innerHTML = ''
+            for (let src of imges) {
+              images_third_page.innerHTML += `<img src="${src}" class="third_img_left">`
+            }
+            let third_img_left = document.querySelectorAll('.third_img_left')
+            for (let item of third_img_left) {
+              item.onclick = () =>{
+                product_img.src = item.src
+              }
             }
             product_img.src = finded.media[0]
             product_name.innerHTML = finded.title
@@ -543,6 +583,11 @@ async function reload(place, item) {
         no_tovar.style.display = 'none'
       } else {
         user_personals[0].click()
+      }
+      if (parseInt(inp_basket2.value) > 1) {
+        green_prices.style.display = 'block'
+      }else {
+        green_prices.style.display = 'none'
       }
     }
   });
@@ -582,14 +627,14 @@ function basket() {
             if (foundObject) {
               if (foundObject.amount < 100) {
                 foundObject.amount += 1
+                change_basket_sever(arr_basket)
                 showed_basket(arr_basket, check)
-                localStorage.setItem("basket", JSON.stringify(arr_basket))
               }
             } else {
               finded.amount = 1
               arr_basket.push(finded)
+              change_basket_sever(arr_basket)
               showed_basket(arr_basket, check)
-              localStorage.setItem("basket", JSON.stringify(arr_basket))
             }
             let item_added_modal = document.querySelector('.item_added_modal')
             item_added_modal.style = 'animation: appearFromTop 1.5s linear forwards;'
@@ -787,8 +832,8 @@ function inp_bask(val, aydi) {
   for (let item of arr_basket) {
     if (item.id == aydi) {
       item.amount = val
+      change_basket_sever(arr_basket)
       showed_basket(arr_basket, check)
-      localStorage.setItem("basket", JSON.stringify(arr_basket))
     }
   }
 }
@@ -798,8 +843,8 @@ function count_in_basket(str, aydi) {
       if (item.id == aydi) {
         if (item.amount < 100) {
           item.amount += 1
+          change_basket_sever(arr_basket)
           showed_basket(arr_basket, check)
-          localStorage.setItem("basket", JSON.stringify(arr_basket))
         }
       }
     }
@@ -808,8 +853,8 @@ function count_in_basket(str, aydi) {
       if (item.id == aydi) {
         if (item.amount > 1) {
           item.amount -= 1
+          change_basket_sever(arr_basket)
           showed_basket(arr_basket, check)
-          localStorage.setItem("basket", JSON.stringify(arr_basket))
         }
       }
     }
@@ -817,8 +862,8 @@ function count_in_basket(str, aydi) {
 }
 function delete_basket(idToDelete) {
   arr_basket = arr_basket.filter(obj => obj.id != idToDelete);
+  change_basket_sever(arr_basket)
   showed_basket(arr_basket, check)
-  localStorage.setItem("basket", JSON.stringify(arr_basket))
   if (arr_basket.length < 1) {
     if (cart_page.style.display != 'none') {
       cart_btn.click()
@@ -886,6 +931,11 @@ function count_in_third_page(str) {
     }
   }
   prov2()
+  if (parseInt(inp_basket2.value) > 1) {
+    green_prices.style.display = 'block'
+  }else {
+    green_prices.style.display = 'none'
+  }
 }
 function prov2() {
   let price_third = document.querySelector('.price_third')
@@ -910,13 +960,13 @@ bas_added.onclick = () => {
         foundObject.amount = 100
       }
     }
+    change_basket_sever(arr_basket)
     showed_basket(arr_basket, check)
-    localStorage.setItem("basket", JSON.stringify(arr_basket))
   } else {
     third_object.amount = parseInt(inp_basket2.value)
     arr_basket.push(third_object)
+    change_basket_sever(arr_basket)
     showed_basket(arr_basket, check)
-    localStorage.setItem("basket", JSON.stringify(arr_basket))
   }
   let item_added_modal = document.querySelector('.item_added_modal')
   item_added_modal.style = 'animation: appearFromTop 1.5s linear forwards;'
@@ -1112,7 +1162,6 @@ function found_price(place) {
         som = som.innerHTML
         som = som.slice(0, -4)
         som = som.replace(/[ ,\&nbsp;]/g, '');
-        console.log(som);
         som = parseInt(som)
         ar.push(som)
       }
@@ -1124,13 +1173,16 @@ ot_and_do.forEach(i => {
     if (parseInt(i.value) < 0) {
       i.value = 0
     }
-    if (parseInt(i.value) > max_at) {
+    if (parseInt(i.value) >= max_at) {
       i.value = max_at
     }
     filter_color.forEach(color => {
       color.classList.remove('act_block')
     })
     if (i.id == 'ot') {
+      if (parseInt(i.value) >= ot_and_do[1].value) {
+        i.value = min_at
+      }
       found_price(filter_grid)
       for (let item of filter_grid.children) {
         item.style.display = 'none'
@@ -1138,11 +1190,14 @@ ot_and_do.forEach(i => {
         som = som.innerHTML
         som = som.slice(0, -4)
         som = som.replace(/[ ,\&nbsp;]/g, '');
-        console.log(som);
         som = parseInt(som)
-        if (som >= i.value) {
+        if (som >= parseInt(ot_and_do[0].value) && som <= parseInt(ot_and_do[1].value)) {
           let k = som.toString() + ' сум'
-          if (item.children[2].lastElementChild.firstElementChild.lastElementChild.innerHTML == k) {
+          k = k.replace(/[ ,\&nbsp;]/g, '');
+          let o = item.children[2].lastElementChild.firstElementChild.lastElementChild.innerHTML
+          o = o.replace(/[ ,\&nbsp;]/g, '');
+          console.log(k, o);
+          if (o == k) {
             item.style.display = 'block'
           }
         }
@@ -1159,11 +1214,14 @@ ot_and_do.forEach(i => {
         som = som.innerHTML
         som = som.slice(0, -4)
         som = som.replace(/[ ,\&nbsp;]/g, '');
-        console.log(som);
         som = parseInt(som)
-        if (som <= i.value) {
+        if (som <= parseInt(ot_and_do[1].value) && som >= parseInt(ot_and_do[0].value)) {
           let k = som.toString() + ' сум'
-          if (item.children[2].lastElementChild.firstElementChild.lastElementChild.innerHTML == k) {
+          k = k.replace(/[ ,\&nbsp;]/g, '');
+          let o = item.children[2].lastElementChild.firstElementChild.lastElementChild.innerHTML
+          o = o.replace(/[ ,\&nbsp;]/g, '');
+          console.log(k, o);
+          if (o == k) {
             item.style.display = 'block'
           }
         }
@@ -1243,9 +1301,60 @@ for (let i = 0; i < kab.length - 6; i++) {
 
 leave_phone_ac.onclick = () => {
   localStorage.setItem('account', 'havent')
-  localStorage.removeItem('Liked')
-  localStorage.removeItem('basket')
   setTimeout(() => {
     location.assign("/index.html")
   }, 1500)
 }
+
+
+async function change_like_sever(arr) {
+  let obj_acc = JSON.parse(localStorage.getItem('account'))
+  fetch('https://ayub-market-default-rtdb.firebaseio.com/user.json')
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      let foundObject = data.find(function (item) {
+        return item.email === obj_acc.email;
+      });
+      foundObject.liked = JSON.stringify(arr)
+      obj_acc = foundObject
+      localStorage.setItem('account', JSON.stringify(obj_acc))
+      fetch(`https://ayub-market-default-rtdb.firebaseio.com/user.json`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": 'application/json.charset=utf-8'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+    })
+}
+
+async function change_basket_sever(arr) {
+  let obj_acc = JSON.parse(localStorage.getItem('account'))
+  fetch('https://ayub-market-default-rtdb.firebaseio.com/user.json')
+    .then(res => res.json())
+    .then(data => {
+      let foundObject = data.find(function (item) {
+        return item.email === obj_acc.email;
+      });
+      foundObject.basket = JSON.stringify(arr)
+      obj_acc = foundObject
+      localStorage.setItem('account', JSON.stringify(obj_acc))
+      fetch(`https://ayub-market-default-rtdb.firebaseio.com/user.json`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": 'application/json.charset=utf-8'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+    })
+}
+let animka = document.querySelector('.animka')
+setTimeout(() => {
+  animka.style.opacity = 0
+  setTimeout(() => {
+    animka.style.display = 'none'
+  }, 1000)
+}, 3000)

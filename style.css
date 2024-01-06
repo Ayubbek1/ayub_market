@@ -373,15 +373,17 @@ header {
   transition: 0.5s ease;
 }
 
-.swiper {
+.swiper1 {
   border-radius: 10px;
+  overflow: hidden;
 }
-
 .swiper2 {
   display: none;
   overflow: hidden;
 }
-
+.heart{
+  z-index: 2!important;
+}
 .swiper-button-prev {
   background: rgba(255, 255, 255, 0.401);
   color: #000 !important;
@@ -422,7 +424,7 @@ header {
   width: 100%;
 }
 
-.swiper {
+.swiper1 {
   margin-top: 10px;
 }
 
@@ -621,17 +623,16 @@ header {
 }
 
 .add_cart {
+  height: 30px;
+  padding: 3.5px;
   width: 30px;
-  padding: 5px;
   border-radius: 100%;
-  opacity: 50%;
   border: 1px solid #c4c4c4;
   transition: 0.3s ease;
-
 }
 
 .add_cart:hover {
-  background: #A8AAB2;
+  background: #c7c9d0;
   transition: 0.3s ease;
 }
 
@@ -1664,7 +1665,7 @@ a {
   margin: 20px 0;
 }
 
-.no_tovar {
+.no_tovar, .dont_find {
   max-width: 1200px;
   display: none;
   text-align: center;
@@ -1851,4 +1852,16 @@ a {
 .top-chat,
 .bottom-chat {
     min-height: 90px;
+}
+
+.poisk_page{
+  display: none;
+  flex-direction: column;
+  width: 100%;
+}
+.kab_item2{
+  display: none;
+}
+.header-phone, .header-phone2{
+  display: none;
 }

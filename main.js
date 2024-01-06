@@ -2,7 +2,7 @@ let onsale_main = document.querySelector('.mn1')
 let mn1_h2 = document.querySelector(".mn1_h2")
 let onsale_main2 = document.querySelector('.mn2')
 let liked = document.querySelector(".liked")
-let swiper = document.querySelector(".swiper")
+let swiper = document.querySelector(".swiper1")
 let swiper2 = document.querySelector('.swiper2')
 let logo = document.querySelector(".logo")
 let date_day = new Date()
@@ -136,11 +136,7 @@ function addToFav() {
           }
         }
       }
-    }) // конец функции добавить в избранное
-  let imgs = document.querySelectorAll("img")
-  imgs.forEach(image => {
-    image.setAttribute("draggable", "false")
-  });
+    }) 
 }
 let user_personals = document.querySelectorAll(".user_personal")
 let register_modal = document.querySelector('.register_modal')
@@ -172,6 +168,10 @@ user_personals[1].onclick = () => {
   cart_page.style.display = "none"
   product_page.style.display = "none"
   filter_page.style.display = 'none'
+  footer.style.display = 'flex'
+  poisk_page.style.display = 'none'
+  header_phone.classList.remove('header-phone2')
+  dont_find.style.display = 'none'
   no_tovar.style.display = 'none'
   if (arr_liked.length != 0) {
     liked.innerHTML = ""
@@ -213,6 +213,10 @@ logo.onclick = () => {
   main_search.value = ''
   phone_search.value = ''
   filter_page.style.display = 'none'
+  dont_find.style.display = 'none'
+  footer.style.display = 'flex'
+  poisk_page.style.display = 'none'
+  header_phone.classList.remove('header-phone2')
   mn1_h2.style.display = "block"
   onsale_main.style.display = "grid"
   liked.classList.remove('grid')
@@ -461,6 +465,8 @@ function loged(arr) {
     }
   }
 }
+let countsit = document.querySelectorAll('.countsit')
+let images_third_page = document.querySelector('.images_third_page')
 let green_prices = document.querySelector('.green_prices')
 async function reload(place, item) {
   let colors = Object.values(item.colors)
@@ -469,8 +475,19 @@ async function reload(place, item) {
   if (item.salePercentage == 0) {
     item.salePercentage = 72
   }
+  let imags = Object.values(item.media)
+  let swiper_item = ''
+  for (let image of imags) {
+    if (image != '' && image != null && image != undefined && image.slice(0, 18) != 'https://www.mvideo') {
+      swiper_item += `<div id="${item.id}" class="onsale_item_img swiper-slide" style="background-image: url(${image});"></div>`
+    }
+  }
   place.innerHTML += `<div id="${item.id}" class="onsale_item" col='${colors}'>
-  <div id="${item.id}" class="onsale_item_img" style="background-image: url(${item.media[0]});"></div>
+  <div class="swiper tovar">
+    <div class="swiper-wrapper">
+      ${swiper_item}
+    </div>
+  </div>
   <div class="heart" id="${like}" fresh="${item.id}">
   <svg data-v-ff0a7354="" width="20" height="20" class="heart_not_active" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" alt="like" class="ui-icon ">
   <path d="M5.95 2C8.51792 2 10 4.15234 10 4.15234C10 4.15234 11.485 2 14.05 2C16.705 2 19 4.07 19 6.95C19 11.1805 12.5604 15.6197 10.3651 17.5603C10.1582 17.7432 9.84179 17.7432 9.63488 17.5603C7.44056 15.6209 1 11.1803 1 6.95C1 4.07 3.295 2 5.95 2Z" fill="white" fill-opacity="0.8"></path>
@@ -489,32 +506,20 @@ async function reload(place, item) {
         <p class="without_sale">${item.price.toLocaleString()} сум</p>
         <p>${Math.ceil(item.price / 100 * (100 - item.salePercentage)).toLocaleString()} сум</p>
       </div>
-      <img id="${item.id}" class="add_cart" width="24px"
-        src="https://cdn1.iconfinder.com/data/icons/actnia-ecommerce-delivery/24/bag-add-256.png" alt="">
+      <svg id="${item.id}" class="add_cart" data-v-40da8b10="" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ui-icon  add-cart-icon">
+<path d="M8 10V8H6V12.5C6 12.7761 5.77614 13 5.5 13C5.22386 13 5 12.7761 5 12.5V7H8C8 4.59628 9.95227 3 12 3C14.0575 3 16 4.70556 16 7H19V19.5C19 20.3284 18.3284 21 17.5 21H12.5C12.2239 21 12 20.7761 12 20.5C12 20.2239 12.2239 20 12.5 20H17.5C17.7761 20 18 19.7761 18 19.5V8H16V10H15V8H9V10H8ZM12 4C10.4477 4 9 5.20372 9 7H15C15 5.29444 13.5425 4 12 4Z" fill="black"></path>
+<path d="M7.5 14C7.77614 14 8 14.2239 8 14.5V17H10.5C10.7761 17 11 17.2239 11 17.5C11 17.7761 10.7761 18 10.5 18H8V20.5C8 20.7761 7.77614 21 7.5 21C7.22386 21 7 20.7761 7 20.5V18H4.5C4.22386 18 4 17.7761 4 17.5C4 17.2239 4.22386 17 4.5 17H7V14.5C7 14.2239 7.22386 14 7.5 14Z" fill="black"></path>
+</svg>
     </div>
   </div>
 </div>`
+  let tovar = new Swiper(".tovar", {});
   let product_name = document.querySelector(".cart_page_mainfo h2")
   let rate = document.querySelector(".cart_page_rating p")
   let heart = document.querySelectorAll('.heart')
   let onsale_items = document.querySelectorAll(".onsale_item_img")
   onsale_items.forEach(elem => {
-    heart.forEach(hert => {
-      document.addEventListener('DOMContentLoaded', function () {
-        var allowedArea = document.getElementById('allowedArea');
-        document.addEventListener('click', function (event) {
-          // Проверяем, находится ли элемент, по которому кликнули, внутри разрешенной области
-          if (event.target.closest(elem)) {
-            alert('Click allowed in the allowed area!');
-          } else {
-            alert('Click disabled in the disallowed area!');
-            event.preventDefault(); // Предотвращаем выполнение действия
-          }
-        });
-      });
-    })
     elem.onclick = () => {
-      let images_third_page = document.querySelector('.images_third_page')
       main_search.value = ''
       phone_search.value = ''
       for (let item of menu_children) {
@@ -533,7 +538,6 @@ async function reload(place, item) {
             })
             third_object = finded
             product_img.src = finded.media[0]
-            let countsit = document.querySelectorAll('.countsit')
             countsit.forEach(it => {
               it.onclick = () => {
                 count_in_third_page(it.innerHTML)
@@ -541,12 +545,12 @@ async function reload(place, item) {
             });
             green_prices.innerHTML = `${Math.ceil(third_object.price / 100 * (100 - third_object.salePercentage)).toLocaleString()} сум/ед`
             let title_third = document.querySelector('.title_third')
-            title_third.innerHTML = `${third_object.title}`
             let inp_basket2 = document.querySelector('.inp_basket2')
+            title_third.innerHTML = `${third_object.title}`
             inp_basket2.onchange = () => {
               if (parseInt(inp_basket2.value) > 1) {
                 green_prices.style.display = 'block'
-              }else {
+              } else {
                 green_prices.style.display = 'none'
               }
               if (inp_basket2.value < 1) {
@@ -563,7 +567,7 @@ async function reload(place, item) {
             }
             let third_img_left = document.querySelectorAll('.third_img_left')
             for (let item of third_img_left) {
-              item.onclick = () =>{
+              item.onclick = () => {
                 product_img.src = item.src
               }
             }
@@ -579,23 +583,23 @@ async function reload(place, item) {
         swiper2.style.display = "none"
         liked.classList.remove('grid')
         cart_page.style.display = "none"
+        footer.style.display = 'flex'
+        poisk_page.style.display = 'none'
+        header_phone.classList.remove('header-phone2')
         product_page.style.display = "flex"
         filter_page.style.display = 'none'
+        dont_find.style.display = 'none'
         no_tovar.style.display = 'none'
       } else {
         user_personals[0].click()
       }
       if (parseInt(inp_basket2.value) > 1) {
         green_prices.style.display = 'block'
-      }else {
+      } else {
         green_prices.style.display = 'none'
       }
       product_img.src = third_object.media[0]
     }
-  });
-  let imgs = document.querySelectorAll("img")
-  imgs.forEach(image => {
-    image.setAttribute("draggable", "false")
   });
 }
 let go_in_basket = document.querySelector('.go_in_basket')
@@ -890,6 +894,7 @@ cart_btn.onmouseenter = () => {
 }
 cart_btn.onclick = () => {
   filter_page.style.display = "none"
+  dont_find.style.display = "none"
   mn1_h2.style.display = "none"
   for (let item of menu_children) {
     item.classList.remove('active-bottom-menu')
@@ -935,7 +940,7 @@ function count_in_third_page(str) {
   prov2()
   if (parseInt(inp_basket2.value) > 1) {
     green_prices.style.display = 'block'
-  }else {
+  } else {
     green_prices.style.display = 'none'
   }
 }
@@ -991,6 +996,9 @@ let f_tit = document.querySelector('.f_tit')
 let filter_page = document.querySelector('.filter_page')
 for (let it of katlink) {
   it.onclick = (e) => {
+    footer.style.display = 'flex'
+    poisk_page.style.display = 'none'
+    header_phone.classList.remove('header-phone2')
     for (let item of menu_children) {
       item.classList.remove('active-bottom-menu')
     }
@@ -1041,59 +1049,72 @@ phone_search.onchange = () => {
   if (phone_search.value != '') {
     chan()
   } else {
-    alert('Товаров не найдено!')
+    dont_find.style.display = 'flex'
+    filter_page.style.display = 'none'
+    footer.style.display = 'flex'
+    poisk_page.style.display = 'none'
+    header_phone.classList.remove('header-phone2')
   }
 }
+let dont_find = document.querySelector('.dont_find')
 main_search.addEventListener('change', chan)
 function chan() {
-  for (let item of menu_children) {
-    item.classList.remove('active-bottom-menu')
-  }
-  menu_children[1].classList.add('active-bottom-menu')
-  no_tovar.style.display = 'none'
-  filter_page.style.display = 'flex'
-  mn1_h2.style.display = "none"
-  onsale_main.style.display = "none"
-  swiper.style.display = "none"
-  swiper2.style.display = "none"
-  cart_page.style.display = "none"
-  product_page.style.display = "none"
-  liked.style.display = 'none'
-  no_tovar.style.display = 'none'
-  let socer = true
-  let f_tit = document.querySelector('.f_tit')
-  let filter_grid = document.querySelector('.filter_grid')
-  filter_grid.innerHTML = ``
-  if (main_search.value != '') {
-    fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
-      .then(res => res.json())
-      .then(data => {
-        for (let item of data.goods) {
-          item.price = parseInt(item.price * rub)
-          if (item.title.toLocaleLowerCase().search(main_search.value.toLocaleLowerCase().trim()) == -1) {
-            f_tit.innerText = `Товары не найдены !`
-          } else {
-            socer = false
-            spy_liked(item)
-            reload(filter_grid, item)
+  footer.style.display = 'flex'
+  poisk_page.style.display = 'none'
+  header_phone.classList.remove('header-phone2')
+  if (main_search.value == '') {
+    dont_find.style.display = 'flex'
+    filter_page.style.display = 'none'
+  } else {
+    for (let item of menu_children) {
+      item.classList.remove('active-bottom-menu')
+    }
+    menu_children[1].classList.add('active-bottom-menu')
+    no_tovar.style.display = 'none'
+    filter_page.style.display = 'flex'
+    mn1_h2.style.display = "none"
+    onsale_main.style.display = "none"
+    swiper.style.display = "none"
+    swiper2.style.display = "none"
+    cart_page.style.display = "none"
+    product_page.style.display = "none"
+    liked.style.display = 'none'
+    no_tovar.style.display = 'none'
+    let socer = true
+    let f_tit = document.querySelector('.f_tit')
+    let filter_grid = document.querySelector('.filter_grid')
+    filter_grid.innerHTML = ``
+    if (main_search.value != '') {
+      fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
+        .then(res => res.json())
+        .then(data => {
+          for (let item of data.goods) {
+            item.price = parseInt(item.price * rub)
+            if (item.title.toLocaleLowerCase().search(main_search.value.toLocaleLowerCase().trim()) == -1) {
+              f_tit.innerText = `Товары не найдены !`
+            } else {
+              socer = false
+              spy_liked(item)
+              reload(filter_grid, item)
+            }
           }
-        }
-        basket()
-        addToFav()
-        minmax(filter_grid)
-        if (filter_grid.innerHTML != '') {
-          f_tit.innerText = `Товары по запросу: "${main_search.value}"`
-        }
-        if (socer == true) {
-          phone_search.value = "Не найдено!"
-          setTimeout(() => {
-            phone_search.value = ''
-            katlink[2].click()
-          }, 1000)
-        }
-      })
+          basket()
+          addToFav()
+          minmax(filter_grid)
+          if (filter_grid.innerHTML != '') {
+            f_tit.innerText = `Товары по запросу: "${main_search.value}"`
+          }
+          if (socer == true) {
+            dont_find.style.display = 'flex'
+            filter_page.style.display = 'none'
+          } else {
+            dont_find.style.display = 'none'
+            filter_page.style.display = 'flex'
+          }
+        })
+    }
+    clear_filters.click()
   }
-  clear_filters.click()
 }
 
 let filter_color = document.querySelectorAll('.filter_color')
@@ -1172,6 +1193,10 @@ function found_price(place) {
 }
 ot_and_do.forEach(i => {
   i.onchange = () => {
+    if (i.value == '') {
+      ot_and_do[0].value = min_at
+      ot_and_do[1].value = max_at
+    }
     if (parseInt(i.value) < 0) {
       i.value = 0
     }
@@ -1249,15 +1274,15 @@ otmen.onclick = () => {
   }
 }
 let menu_children = document.querySelectorAll('.menu_child')
-let katlink2 = document.querySelectorAll('.katlink2')
-for (let i = 0; i < katlink2.length; i++) {
-  katlink2[i].onclick = () => {
-    katlink[i].click()
-  }
-}
 let my_kab = document.querySelector('.may_kab')
+let poisk_page = document.querySelector('.poisk_page')
+let footer = document.querySelector('footer')
+let header_phone = document.querySelector('.header-phone')
 for (let i = 0; i < menu_children.length; i++) {
   menu_children[i].onclick = () => {
+    footer.style.display = 'flex'
+    poisk_page.style.display = 'none'
+    header_phone.classList.remove('header-phone2')
     for (let item of menu_children) {
       item.classList.remove('active-bottom-menu')
     }
@@ -1265,7 +1290,19 @@ for (let i = 0; i < menu_children.length; i++) {
     if (i == 0) {
       logo.click()
     } else if (i == 1) {
-      katlink[2].click()
+      no_tovar.style.display = 'none'
+      filter_page.style.display = 'none'
+      header_phone.classList.add('header-phone2')
+      mn1_h2.style.display = "none"
+      onsale_main.style.display = "none"
+      swiper.style.display = "none"
+      swiper2.style.display = "none"
+      menu_children[1].classList.add('active-bottom-menu')
+      cart_page.style.display = "none"
+      footer.style.display = 'none'
+      product_page.style.display = "none"
+      liked.style.display = 'none'
+      poisk_page.style.display = 'flex'
     } else if (i == 2) {
       cart_btn.click()
     } else if (i == 3) {
@@ -1293,7 +1330,7 @@ for (let i = 0; i < kab.length - 6; i++) {
       //
     } else if (i == 6) {
       chats[0].click()
-    } else if (i == 8) {
+     add} else if (i == 8) {
       //
     } else {
       alert('Извините, но на данный момент функция не доступна')
@@ -1360,3 +1397,33 @@ setTimeout(() => {
     animka.style.display = 'none'
   }, 1000)
 }, 3000)
+fetch('https://filter-4d40a-default-rtdb.firebaseio.com/user.json')
+  .then(res => res.json())
+  .then(data => {
+    console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      let item = data[i]
+      poisk_page.innerHTML += `<div class="kab_item2" id="${i}" style="height: 40px;">
+        ${item.img}
+        ${item.title}
+      </div>`
+    }
+    let poisk_page2 = document.querySelector('.poisk_page')
+    let katlink2 = poisk_page2.children
+    for (let i = 0; i < katlink2.length; i++) {
+      katlink2[i].onclick = () => {
+        console.log(katlink2[i].id);
+        if (katlink2[i].id == 0) {
+          katlink[1].click()
+        } else if (katlink2[i].id == 1) {
+          katlink[4].click()
+        } else if (katlink2[i].id == 2) {
+          katlink[0].click()
+        } else if (katlink2[i].id == 3) {
+          katlink[2].click()
+        } else if (katlink2[i].id == 4) {
+          katlink[3].click()
+        }
+      }
+    }
+  })

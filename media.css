@@ -4,11 +4,12 @@
         padding: 0 20px;
     }
 
-    .swiper {
+    .swiper1 {
         width: 97%;
         padding: 0;
     }
-    .user_page_block{
+
+    .user_page_block {
         width: 100%;
         margin: 0;
     }
@@ -18,6 +19,7 @@
     .chat_block {
         width: 100%;
     }
+
     .cart_page_main_left {
         width: 70%;
     }
@@ -26,6 +28,7 @@
         padding: 20px;
         border: none;
     }
+
     .cart_page_left {
         width: 80%;
     }
@@ -35,6 +38,7 @@
     .adapt_1100 {
         display: none;
     }
+
     .njj {
         width: 90%;
     }
@@ -87,14 +91,16 @@
     .adapt_980 {
         display: none;
     }
-    
+
     .cart_page_left {
         width: 100%;
         position: relative;
     }
-    .images_third_page{
+
+    .images_third_page {
         max-width: 65px;
     }
+
     footer {
         flex-wrap: wrap;
         row-gap: 40px;
@@ -117,62 +123,81 @@
 }
 
 @media only screen and (max-width: 950px) {
-    .logo_animka{
+    .logo_animka {
         max-width: 280px;
     }
-    .kabinka{
+
+    .add_cart:hover {
+        background: transparent;
+        transition: 0.3s ease;
+    }
+
+    .kabinka {
         display: flex;
     }
+
     .njj {
         max-width: 600px;
     }
+
     .njj {
         width: 80%;
     }
-    .cart_page_left{
+
+    .cart_page_left {
         justify-content: flex-start;
         gap: 20px;
     }
+
     .may_kab {
         display: none;
         width: 100%;
         height: 100vh;
-        background-color: #F2F4F7; 
+        background-color: #F2F4F7;
         position: fixed;
-        padding: 0!important;
+        padding: 0 !important;
         z-index: 999;
         top: 0;
         left: 0;
         min-height: 100vh;
         overflow-y: scroll;
     }
-    .register_modal{
-        z-index: 1000000!important;
+
+    .register_modal {
+        z-index: 1000000 !important;
     }
-    .register{
+
+    .register {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
     }
-    .user_page{
+
+    .user_page {
         flex-direction: column;
     }
-    .adapt_950{
+
+    .adapt_950 {
         display: none;
     }
-    .pick_up_modal_close{
+
+    .pick_up_modal_close {
         top: 20px;
     }
-    .pick_up_modal{
+
+    .pick_up_modal {
         width: 100%;
         padding: 60px 20px 40px 20px;
     }
-    .pick_up_modal_bg{
-        z-index: 1200000000!important;
+
+    .pick_up_modal_bg {
+        z-index: 1200000000 !important;
     }
-    .pick_up_modal_close{
+
+    .pick_up_modal_close {
         right: 20px;
     }
-    .cities{
+
+    .cities {
         font-size: 14px;
     }
 
@@ -180,11 +205,13 @@
         display: none;
     }
 
-    .kab_img{
+    .kab_img {
         width: 24px;
         height: 24px;
     }
-    .kab_item {
+
+    .kab_item,
+    .kab_item2 {
         padding: 0 15px;
         width: 100%;
         display: flex;
@@ -194,6 +221,10 @@
         font-weight: 500;
         align-items: center;
         background-color: white;
+    }
+
+    .kab_item2 {
+        padding: 0;
     }
 
     .body2 {
@@ -305,26 +336,6 @@
         display: none;
     }
 
-    .kategories-phone {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .katlink2 {
-        font-size: 13px;
-        padding: 10px 15px;
-        border-radius: 20px;
-        transition: 0.3s ease;
-        cursor: pointer;
-        color: #757581;
-        border: 1px solid #757581;
-        background-color: #EDEFF2;
-    }
-
-    .katlink2:active {
-        transform: scale(1.1);
-    }
-
     .filter {
         background-color: white;
         width: 100%;
@@ -405,6 +416,7 @@
         background-color: white;
         justify-content: space-between;
     }
+
     .white_body {
         z-index: 1200000000000;
     }
@@ -443,7 +455,7 @@
         font-size: 16px;
     }
 
-    .swiper {
+    .swiper1 {
         display: none !important;
     }
 
@@ -454,7 +466,7 @@
         border-radius: 0px;
     }
 
-    .swiper-slide {
+    .sli {
         width: 80%;
         border-radius: 15px;
         border-radius: 15px;
@@ -538,6 +550,19 @@
     .grid {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
+
+    .header-phone2 {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: fit-content;
+        background-color: #F2F4F7;
+    }
+
+    .header-phone2 .top-phone {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 760px) {
@@ -595,10 +620,12 @@
         width: 60%;
         font-size: 12px;
     }
-    .cart_page_left{
+
+    .cart_page_left {
         justify-content: space-between;
         gap: 0px;
     }
+
     .price_block {
         width: 100px;
     }
@@ -614,7 +641,8 @@
     .privacy {
         margin-top: 10px;
     }
-    .avatar{
+
+    .avatar {
         max-width: 200px;
         height: auto;
     }
@@ -651,31 +679,34 @@
     .margt {
         font-size: 12px;
     }
-    .onsale_item{
+
+    .onsale_item {
         max-width: 205.4px;
     }
-    .user_settings_blocks{
+
+    .user_settings_blocks {
         width: 100%;
     }
+
     .top-chat,
     .bottom-chat {
         min-height: 60px;
     }
-    .user_page{
+
+    .user_page {
         width: 100%;
-    }
-    .user_settings{
-        width: 100%;
-    }
-    .user_settings input{
-        width: 100%;
-    }
-    .cities{
-        font-size: 12px;
     }
 
-    .kategories-phone {
-        margin-bottom: 20px;
+    .user_settings {
+        width: 100%;
+    }
+
+    .user_settings input {
+        width: 100%;
+    }
+
+    .cities {
+        font-size: 12px;
     }
 
     .message {
@@ -689,7 +720,8 @@
         border-radius: 0;
         padding: 0 10px;
     }
-    .white_body{
+
+    .white_body {
         padding: 0;
         height: 100vh;
     }
@@ -744,6 +776,7 @@
         font-size: 10px;
         padding: 7px 12px;
     }
+
     .amount_phone {
         position: absolute;
         align-items: center;
@@ -776,14 +809,17 @@
         grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     }
 }
+
 @media only screen and (max-width: 320px) {
     .onsale_item_img {
         height: 200px;
     }
-    .images_third_page{
-        display: none!important;
+
+    .images_third_page {
+        display: none !important;
     }
-    .njj{
+
+    .njj {
         width: 100%;
     }
 }

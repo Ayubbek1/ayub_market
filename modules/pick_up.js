@@ -170,6 +170,7 @@ function city_reload(arr) {
 
         }
     });
+    if(!localStorage.getItem("pickUpAdress")){return}
     if (localStorage.getItem("pickUpAdress").length !== 0) {
         cities.forEach(city => {
             if (city.id == localStorage.getItem("pickUpAdress")) {

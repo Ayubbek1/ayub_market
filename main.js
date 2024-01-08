@@ -1353,7 +1353,7 @@ for (let i = 0; i < kab.length - 6; i++) {
       //
     } else if (i == 6) {
       chats[0].click()
-    } else if (i == 8) {
+     add} else if (i == 8) {
       //
     } else {
       alert('Извините, но на данный момент функция не доступна')

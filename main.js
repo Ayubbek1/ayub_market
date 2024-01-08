@@ -2,7 +2,7 @@ let onsale_main = document.querySelector('.mn1')
 let mn1_h2 = document.querySelector(".mn1_h2")
 let onsale_main2 = document.querySelector('.mn2')
 let liked = document.querySelector(".liked")
-let swiper = document.querySelector(".swiper")
+let swiper = document.querySelector(".swiper1")
 let swiper2 = document.querySelector('.swiper2')
 let logo = document.querySelector(".logo")
 let date_day = new Date()
@@ -19,6 +19,7 @@ let cart_hover = document.querySelector('.cart_hover')
 let filter_grid = document.querySelector('.filter_grid')
 let amount_phone = document.querySelector('.amount_phone')
 let no_tovar = document.querySelector('.no_tovar')
+let product_img = document.querySelector(".njj")
 let months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 let right_1 = 0
 let right_2 = 0
@@ -33,34 +34,59 @@ let like = undefined
 let arr_liked = [] //массив с любимыми товарами
 let arr_basket = []
 let check = []
-if (localStorage.getItem("Liked") != null || localStorage.getItem("Liked") != undefined) {
-  arr_liked = JSON.parse(localStorage.getItem("Liked"))
-}
-if (localStorage.getItem("basket") != null || localStorage.getItem("basket") != undefined) {
-  arr_basket = JSON.parse(localStorage.getItem("basket"))
-  showed_basket(arr_basket, check)
-}
-fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
+let arr_from_users = []
+async function get_products_from_users() {
+  fetch("https://tovari-55479-default-rtdb.firebaseio.com/user.json")
   .then(res => res.json())
   .then(data => {
-    for (let item of data.goods) {
-      item.price = parseInt(item.price * rub)
-      if (item.salePercentage == 0) {
-        item.salePercentage = 72
-      }
-      if (item.isBlackFriday == true) {
-        spy_liked(item)
-        reload(onsale_main, item)
-      }
-      if (item.rating == 5) {
-        spy_liked(item)
-        reload(onsale_main2, item)
-      }
+    if (data != null) {
+      arr_from_users = data
     }
-    basket()
-    addToFav()
   })
-
+}
+get_products_from_users()
+console.log(localStorage.getItem('account'));
+let obj_acc = undefined
+if (localStorage.getItem("account") != 'havent' && localStorage.getItem("account") != null) {
+  obj_acc = JSON.parse(localStorage.getItem('account'))
+}
+fetch('https://ayub-market-default-rtdb.firebaseio.com/user.json')
+  .then(res => res.json())
+  .then(data => {
+    console.log(data);
+    let foundObject = data.find(function (item) {
+      return item.email === obj_acc.email;
+    });
+    arr_liked = JSON.parse(foundObject.liked)
+    arr_basket = JSON.parse(foundObject.basket)
+    obj_acc = foundObject
+    localStorage.setItem('account', JSON.stringify(obj_acc))
+    showed_basket(arr_basket, check)
+  })
+setTimeout(() => {
+  get_products_from_users()
+  fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
+    .then(res => res.json())
+    .then(data => {
+      data.goods = [...data.goods, ...arr_from_users]
+      for (let item of data.goods) {
+        item.price = parseInt(item.price * rub)
+        if (item.salePercentage == 0) {
+          item.salePercentage = 72
+        }
+        if (item.isBlackFriday == true) {
+          spy_liked(item)
+          reload(onsale_main, item)
+        }
+        if (item.rating == 5) {
+          spy_liked(item)
+          reload(onsale_main2, item)
+        }
+      }
+      basket()
+      addToFav()
+    })
+}, 3000)
 function spy_liked(obj) {
   let foundObject = arr_liked.find(ob => {
     return ob.id === obj.id;
@@ -74,9 +100,11 @@ function spy_liked(obj) {
 function addToFav() {
   // Функция "Добавить в избранное"
   let heart = document.querySelectorAll('.heart')
+  get_products_from_users()
   fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
     .then(res => res.json())
     .then(data => {
+      data.goods = [...data.goods, ...arr_from_users]
       for (let item of data.goods) {
         item.price = parseInt(item.price * rub)
       }
@@ -97,7 +125,7 @@ function addToFav() {
               for (let item of fresh) {
                 item.id = "one"
               }
-              localStorage.setItem('Liked', JSON.stringify(arr_liked))
+              change_like_sever(arr_liked)
               //
             } else {
               for (let item of data.goods) {
@@ -115,7 +143,7 @@ function addToFav() {
               for (let item of fresh) {
                 item.id = "zero"
               }
-              localStorage.setItem('Liked', JSON.stringify(arr_liked))
+              change_like_sever(arr_liked)
               //
             }
           } else {
@@ -123,11 +151,7 @@ function addToFav() {
           }
         }
       }
-    }) // конец функции добавить в избранное
-  let imgs = document.querySelectorAll("img")
-  imgs.forEach(image => {
-    image.setAttribute("draggable", "false")
-  });
+    })
 }
 let user_personals = document.querySelectorAll(".user_personal")
 let register_modal = document.querySelector('.register_modal')
@@ -159,6 +183,10 @@ user_personals[1].onclick = () => {
   cart_page.style.display = "none"
   product_page.style.display = "none"
   filter_page.style.display = 'none'
+  footer.style.display = 'flex'
+  poisk_page.style.display = 'none'
+  header_phone.classList.remove('header-phone2')
+  dont_find.style.display = 'none'
   no_tovar.style.display = 'none'
   if (arr_liked.length != 0) {
     liked.innerHTML = ""
@@ -200,6 +228,10 @@ logo.onclick = () => {
   main_search.value = ''
   phone_search.value = ''
   filter_page.style.display = 'none'
+  dont_find.style.display = 'none'
+  footer.style.display = 'flex'
+  poisk_page.style.display = 'none'
+  header_phone.classList.remove('header-phone2')
   mn1_h2.style.display = "block"
   onsale_main.style.display = "grid"
   liked.classList.remove('grid')
@@ -234,10 +266,15 @@ let input_chat = document.querySelector('.inputforchat')
 let chat_block = document.querySelector('.chat_block')
 // 
 let answer = ''
+let apiKey = ''
+fetch('https://api-key-b3e23-default-rtdb.firebaseio.com/user.json')
+  .then(res => res.json())
+  .then(data => {
+    apiKey = data.Api_key
+  })
 async function askQuestion(question) {
-  const apiKey = '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';
   const prompt = `Q: ${question}\nA:`;
-  const response = await fetch('https://api.openai.com/v1/engines/text-davinci-003/completions', {
+  const response = await fetch(`https://api.openai.com/v1/engines/text-davinci-003/completions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -249,6 +286,7 @@ async function askQuestion(question) {
     }),
   });
   const data = await response.json();
+  console.log(data);
   answer = data.choices[0].text.trim()
   if (answer != undefined) {
     chat_block.innerHTML += `<div class="message-block">
@@ -294,9 +332,12 @@ function chatting() {
   if (input_chat.value != '') {
     let m = 'https://cdn1.iconfinder.com/data/icons/sport-94/550/volley-256.png'
     let objt = JSON.parse(localStorage.getItem('account'))
+    let nope = ''
     if (objt.image != 'https://cdn2.iconfinder.com/data/icons/user-interface-169/32/about-256.png' && objt.image != undefined) {
       m = objt.image
+      nope = 'invert(0)'
     } else {
+      nope = 'invert(1)'
       m = 'https://cdn2.iconfinder.com/data/icons/user-interface-169/32/about-256.png'
     }
     chat_block.scrollTop = chat_block.scrollHeight
@@ -305,7 +346,7 @@ function chatting() {
       <p>You</p>
       ${input_chat.value}
     </div>
-    <img src="${m}" alt="" class="art-mess">
+    <img src="${m}" class="art-mess" style="filter: ${nope};">
   </div>`
     chat_block.lastElementChild.scrollIntoView({
       behavior: "smooth",
@@ -389,15 +430,15 @@ let leave_phone_ac = document.querySelector('.leave-phone-ac')
 if (localStorage.getItem("account") != 'havent' && localStorage.getItem("account") != null) {
   let obj_acc = JSON.parse(localStorage.getItem('account'))
   fetch('https://ayub-market-default-rtdb.firebaseio.com/user.json')
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        let foundObject = data.find(function (item) {
-          return item.email === obj_acc.email;
-        });
-        obj_acc = foundObject
-        localStorage.setItem('account', JSON.stringify(obj_acc))
-      })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      let foundObject = data.find(function (item) {
+        return item.email === obj_acc.email;
+      });
+      obj_acc = foundObject
+      localStorage.setItem('account', JSON.stringify(obj_acc))
+    })
   let lo = document.getElementById("lo")
   lo.style.display = 'none'
   log_in.onclick = () => {
@@ -439,6 +480,9 @@ function loged(arr) {
     }
   }
 }
+let countsit = document.querySelectorAll('.countsit')
+let images_third_page = document.querySelector('.images_third_page')
+let green_prices = document.querySelector('.green_prices')
 async function reload(place, item) {
   let colors = Object.values(item.colors)
   colors = JSON.stringify(colors)
@@ -446,8 +490,19 @@ async function reload(place, item) {
   if (item.salePercentage == 0) {
     item.salePercentage = 72
   }
+  let imags = Object.values(item.media)
+  let swiper_item = ''
+  for (let image of imags) {
+    if (image != '' && image != null && image != undefined && image.slice(0, 18) != 'https://www.mvideo') {
+      swiper_item += `<div id="${item.id}" class="onsale_item_img swiper-slide" style="background-image: url(${image});"></div>`
+    }
+  }
   place.innerHTML += `<div id="${item.id}" class="onsale_item" col='${colors}'>
-  <div id="${item.id}" class="onsale_item_img" style="background-image: url(${item.media[0]});"></div>
+  <div class="swiper tovar">
+    <div class="swiper-wrapper">
+      ${swiper_item}
+    </div>
+  </div>
   <div class="heart" id="${like}" fresh="${item.id}">
   <svg data-v-ff0a7354="" width="20" height="20" class="heart_not_active" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" alt="like" class="ui-icon ">
   <path d="M5.95 2C8.51792 2 10 4.15234 10 4.15234C10 4.15234 11.485 2 14.05 2C16.705 2 19 4.07 19 6.95C19 11.1805 12.5604 15.6197 10.3651 17.5603C10.1582 17.7432 9.84179 17.7432 9.63488 17.5603C7.44056 15.6209 1 11.1803 1 6.95C1 4.07 3.295 2 5.95 2Z" fill="white" fill-opacity="0.8"></path>
@@ -466,31 +521,19 @@ async function reload(place, item) {
         <p class="without_sale">${item.price.toLocaleString()} сум</p>
         <p>${Math.ceil(item.price / 100 * (100 - item.salePercentage)).toLocaleString()} сум</p>
       </div>
-      <img id="${item.id}" class="add_cart" width="24px"
-        src="https://cdn1.iconfinder.com/data/icons/actnia-ecommerce-delivery/24/bag-add-256.png" alt="">
+      <svg id="${item.id}" class="add_cart" data-v-40da8b10="" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ui-icon  add-cart-icon">
+<path d="M8 10V8H6V12.5C6 12.7761 5.77614 13 5.5 13C5.22386 13 5 12.7761 5 12.5V7H8C8 4.59628 9.95227 3 12 3C14.0575 3 16 4.70556 16 7H19V19.5C19 20.3284 18.3284 21 17.5 21H12.5C12.2239 21 12 20.7761 12 20.5C12 20.2239 12.2239 20 12.5 20H17.5C17.7761 20 18 19.7761 18 19.5V8H16V10H15V8H9V10H8ZM12 4C10.4477 4 9 5.20372 9 7H15C15 5.29444 13.5425 4 12 4Z" fill="black"></path>
+<path d="M7.5 14C7.77614 14 8 14.2239 8 14.5V17H10.5C10.7761 17 11 17.2239 11 17.5C11 17.7761 10.7761 18 10.5 18H8V20.5C8 20.7761 7.77614 21 7.5 21C7.22386 21 7 20.7761 7 20.5V18H4.5C4.22386 18 4 17.7761 4 17.5C4 17.2239 4.22386 17 4.5 17H7V14.5C7 14.2239 7.22386 14 7.5 14Z" fill="black"></path>
+</svg>
     </div>
   </div>
 </div>`
-  let product_img = document.querySelector(".cart_page_left img")
+  let tovar = new Swiper(".tovar", {});
   let product_name = document.querySelector(".cart_page_mainfo h2")
   let rate = document.querySelector(".cart_page_rating p")
   let heart = document.querySelectorAll('.heart')
   let onsale_items = document.querySelectorAll(".onsale_item_img")
   onsale_items.forEach(elem => {
-    heart.forEach(hert => {
-      document.addEventListener('DOMContentLoaded', function () {
-        var allowedArea = document.getElementById('allowedArea');
-        document.addEventListener('click', function (event) {
-          // Проверяем, находится ли элемент, по которому кликнули, внутри разрешенной области
-          if (event.target.closest(elem)) {
-            alert('Click allowed in the allowed area!');
-          } else {
-            alert('Click disabled in the disallowed area!');
-            event.preventDefault(); // Предотвращаем выполнение действия
-          }
-        });
-      });
-    })
     elem.onclick = () => {
       main_search.value = ''
       phone_search.value = ''
@@ -499,9 +542,11 @@ async function reload(place, item) {
       }
       inp_basket2.value = 1
       if (localStorage.getItem("account") != 'havent' && localStorage.getItem("account") != null) {
+        get_products_from_users()
         fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
           .then(res => res.json())
           .then(data => {
+            data.goods = [...data.goods, ...arr_from_users]
             for (let item of data.goods) {
               item.price = parseInt(item.price * rub)
             }
@@ -509,22 +554,39 @@ async function reload(place, item) {
               return element.id == elem.id
             })
             third_object = finded
-            let countsit = document.querySelectorAll('.countsit')
+            product_img.src = finded.media[0]
             countsit.forEach(it => {
               it.onclick = () => {
                 count_in_third_page(it.innerHTML)
               }
             });
+            green_prices.innerHTML = `${Math.ceil(third_object.price / 100 * (100 - third_object.salePercentage)).toLocaleString()} сум/ед`
             let title_third = document.querySelector('.title_third')
-            title_third.innerHTML = `${third_object.title}`
             let inp_basket2 = document.querySelector('.inp_basket2')
+            title_third.innerHTML = `${third_object.title}`
             inp_basket2.onchange = () => {
+              if (parseInt(inp_basket2.value) > 1) {
+                green_prices.style.display = 'block'
+              } else {
+                green_prices.style.display = 'none'
+              }
               if (inp_basket2.value < 1) {
                 inp_basket2.value = 1
               } else if (inp_basket2.value >= 100) {
                 inp_basket2.value = 100
               }
               prov2()
+            }
+            let imges = Object.values(finded.media)
+            images_third_page.innerHTML = ''
+            for (let src of imges) {
+              images_third_page.innerHTML += `<img src="${src}" class="third_img_left">`
+            }
+            let third_img_left = document.querySelectorAll('.third_img_left')
+            for (let item of third_img_left) {
+              item.onclick = () => {
+                product_img.src = item.src
+              }
             }
             product_img.src = finded.media[0]
             product_name.innerHTML = finded.title
@@ -538,17 +600,23 @@ async function reload(place, item) {
         swiper2.style.display = "none"
         liked.classList.remove('grid')
         cart_page.style.display = "none"
+        footer.style.display = 'flex'
+        poisk_page.style.display = 'none'
+        header_phone.classList.remove('header-phone2')
         product_page.style.display = "flex"
         filter_page.style.display = 'none'
+        dont_find.style.display = 'none'
         no_tovar.style.display = 'none'
       } else {
         user_personals[0].click()
       }
+      if (parseInt(inp_basket2.value) > 1) {
+        green_prices.style.display = 'block'
+      } else {
+        green_prices.style.display = 'none'
+      }
+      product_img.src = third_object.media[0]
     }
-  });
-  let imgs = document.querySelectorAll("img")
-  imgs.forEach(image => {
-    image.setAttribute("draggable", "false")
   });
 }
 let go_in_basket = document.querySelector('.go_in_basket')
@@ -567,9 +635,11 @@ function basket() {
         if (localStorage.getItem("active_page") == "cart") {
           cart_page.style.display = "flex"
         }
+        get_products_from_users()
         fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
           .then(res => res.json())
           .then(data => {
+            data.goods = [...data.goods, ...arr_from_users]
             for (let item of data.goods) {
               item.price = parseInt(item.price * rub)
             }
@@ -582,14 +652,14 @@ function basket() {
             if (foundObject) {
               if (foundObject.amount < 100) {
                 foundObject.amount += 1
+                change_basket_sever(arr_basket)
                 showed_basket(arr_basket, check)
-                localStorage.setItem("basket", JSON.stringify(arr_basket))
               }
             } else {
               finded.amount = 1
               arr_basket.push(finded)
+              change_basket_sever(arr_basket)
               showed_basket(arr_basket, check)
-              localStorage.setItem("basket", JSON.stringify(arr_basket))
             }
             let item_added_modal = document.querySelector('.item_added_modal')
             item_added_modal.style = 'animation: appearFromTop 1.5s linear forwards;'
@@ -787,8 +857,8 @@ function inp_bask(val, aydi) {
   for (let item of arr_basket) {
     if (item.id == aydi) {
       item.amount = val
+      change_basket_sever(arr_basket)
       showed_basket(arr_basket, check)
-      localStorage.setItem("basket", JSON.stringify(arr_basket))
     }
   }
 }
@@ -798,8 +868,8 @@ function count_in_basket(str, aydi) {
       if (item.id == aydi) {
         if (item.amount < 100) {
           item.amount += 1
+          change_basket_sever(arr_basket)
           showed_basket(arr_basket, check)
-          localStorage.setItem("basket", JSON.stringify(arr_basket))
         }
       }
     }
@@ -808,8 +878,8 @@ function count_in_basket(str, aydi) {
       if (item.id == aydi) {
         if (item.amount > 1) {
           item.amount -= 1
+          change_basket_sever(arr_basket)
           showed_basket(arr_basket, check)
-          localStorage.setItem("basket", JSON.stringify(arr_basket))
         }
       }
     }
@@ -817,8 +887,8 @@ function count_in_basket(str, aydi) {
 }
 function delete_basket(idToDelete) {
   arr_basket = arr_basket.filter(obj => obj.id != idToDelete);
+  change_basket_sever(arr_basket)
   showed_basket(arr_basket, check)
-  localStorage.setItem("basket", JSON.stringify(arr_basket))
   if (arr_basket.length < 1) {
     if (cart_page.style.display != 'none') {
       cart_btn.click()
@@ -843,6 +913,7 @@ cart_btn.onmouseenter = () => {
 }
 cart_btn.onclick = () => {
   filter_page.style.display = "none"
+  dont_find.style.display = "none"
   mn1_h2.style.display = "none"
   for (let item of menu_children) {
     item.classList.remove('active-bottom-menu')
@@ -886,6 +957,11 @@ function count_in_third_page(str) {
     }
   }
   prov2()
+  if (parseInt(inp_basket2.value) > 1) {
+    green_prices.style.display = 'block'
+  } else {
+    green_prices.style.display = 'none'
+  }
 }
 function prov2() {
   let price_third = document.querySelector('.price_third')
@@ -910,13 +986,13 @@ bas_added.onclick = () => {
         foundObject.amount = 100
       }
     }
+    change_basket_sever(arr_basket)
     showed_basket(arr_basket, check)
-    localStorage.setItem("basket", JSON.stringify(arr_basket))
   } else {
     third_object.amount = parseInt(inp_basket2.value)
     arr_basket.push(third_object)
+    change_basket_sever(arr_basket)
     showed_basket(arr_basket, check)
-    localStorage.setItem("basket", JSON.stringify(arr_basket))
   }
   let item_added_modal = document.querySelector('.item_added_modal')
   item_added_modal.style = 'animation: appearFromTop 1.5s linear forwards;'
@@ -939,6 +1015,9 @@ let f_tit = document.querySelector('.f_tit')
 let filter_page = document.querySelector('.filter_page')
 for (let it of katlink) {
   it.onclick = (e) => {
+    footer.style.display = 'flex'
+    poisk_page.style.display = 'none'
+    header_phone.classList.remove('header-phone2')
     for (let item of menu_children) {
       item.classList.remove('active-bottom-menu')
     }
@@ -958,9 +1037,11 @@ for (let it of katlink) {
       phone_search.value = ''
       f_tit.innerText = it.innerHTML
       filter_grid.innerHTML = ``
+      get_products_from_users()
       fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
         .then(res => res.json())
         .then(data => {
+          data.goods = [...data.goods, ...arr_from_users]
           for (let item of data.goods) {
             item.price = parseInt(item.price * rub)
             if (item.type == it.id) {
@@ -989,59 +1070,74 @@ phone_search.onchange = () => {
   if (phone_search.value != '') {
     chan()
   } else {
-    alert('Товаров не найдено!')
+    dont_find.style.display = 'flex'
+    filter_page.style.display = 'none'
+    footer.style.display = 'flex'
+    poisk_page.style.display = 'none'
+    header_phone.classList.remove('header-phone2')
   }
 }
+let dont_find = document.querySelector('.dont_find')
 main_search.addEventListener('change', chan)
 function chan() {
-  for (let item of menu_children) {
-    item.classList.remove('active-bottom-menu')
-  }
-  menu_children[1].classList.add('active-bottom-menu')
-  no_tovar.style.display = 'none'
-  filter_page.style.display = 'flex'
-  mn1_h2.style.display = "none"
-  onsale_main.style.display = "none"
-  swiper.style.display = "none"
-  swiper2.style.display = "none"
-  cart_page.style.display = "none"
-  product_page.style.display = "none"
-  liked.style.display = 'none'
-  no_tovar.style.display = 'none'
-  let socer = true
-  let f_tit = document.querySelector('.f_tit')
-  let filter_grid = document.querySelector('.filter_grid')
-  filter_grid.innerHTML = ``
-  if (main_search.value != '') {
-    fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
-      .then(res => res.json())
-      .then(data => {
-        for (let item of data.goods) {
-          item.price = parseInt(item.price * rub)
-          if (item.title.toLocaleLowerCase().search(main_search.value.toLocaleLowerCase().trim()) == -1) {
-            f_tit.innerText = `Товары не найдены !`
-          } else {
-            socer = false
-            spy_liked(item)
-            reload(filter_grid, item)
+  footer.style.display = 'flex'
+  poisk_page.style.display = 'none'
+  header_phone.classList.remove('header-phone2')
+  if (main_search.value == '') {
+    dont_find.style.display = 'flex'
+    filter_page.style.display = 'none'
+  } else {
+    for (let item of menu_children) {
+      item.classList.remove('active-bottom-menu')
+    }
+    menu_children[1].classList.add('active-bottom-menu')
+    no_tovar.style.display = 'none'
+    filter_page.style.display = 'flex'
+    mn1_h2.style.display = "none"
+    onsale_main.style.display = "none"
+    swiper.style.display = "none"
+    swiper2.style.display = "none"
+    cart_page.style.display = "none"
+    product_page.style.display = "none"
+    liked.style.display = 'none'
+    no_tovar.style.display = 'none'
+    let socer = true
+    let f_tit = document.querySelector('.f_tit')
+    let filter_grid = document.querySelector('.filter_grid')
+    filter_grid.innerHTML = ``
+    if (main_search.value != '') {
+      get_products_from_users()
+      fetch("https://raw.githubusercontent.com/Daler-web-dev/mvideo/main/db.json")
+        .then(res => res.json())
+        .then(data => {
+          data.goods = [...data.goods, ...arr_from_users]
+          for (let item of data.goods) {
+            item.price = parseInt(item.price * rub)
+            if (item.title.toLocaleLowerCase().search(main_search.value.toLocaleLowerCase().trim()) == -1) {
+              f_tit.innerText = `Товары не найдены !`
+            } else {
+              socer = false
+              spy_liked(item)
+              reload(filter_grid, item)
+            }
           }
-        }
-        basket()
-        addToFav()
-        minmax(filter_grid)
-        if (filter_grid.innerHTML != '') {
-          f_tit.innerText = `Товары по запросу: "${main_search.value}"`
-        }
-        if (socer == true) {
-          phone_search.value = "Не найдено!"
-          setTimeout(() => {
-            phone_search.value = ''
-            katlink[2].click()
-          }, 1000)
-        }
-      })
+          basket()
+          addToFav()
+          minmax(filter_grid)
+          if (filter_grid.innerHTML != '') {
+            f_tit.innerText = `Товары по запросу: "${main_search.value}"`
+          }
+          if (socer == true) {
+            dont_find.style.display = 'flex'
+            filter_page.style.display = 'none'
+          } else {
+            dont_find.style.display = 'none'
+            filter_page.style.display = 'flex'
+          }
+        })
+    }
+    clear_filters.click()
   }
-  clear_filters.click()
 }
 
 let filter_color = document.querySelectorAll('.filter_color')
@@ -1112,7 +1208,6 @@ function found_price(place) {
         som = som.innerHTML
         som = som.slice(0, -4)
         som = som.replace(/[ ,\&nbsp;]/g, '');
-        console.log(som);
         som = parseInt(som)
         ar.push(som)
       }
@@ -1121,16 +1216,23 @@ function found_price(place) {
 }
 ot_and_do.forEach(i => {
   i.onchange = () => {
+    if (i.value == '') {
+      ot_and_do[0].value = min_at
+      ot_and_do[1].value = max_at
+    }
     if (parseInt(i.value) < 0) {
       i.value = 0
     }
-    if (parseInt(i.value) > max_at) {
+    if (parseInt(i.value) >= max_at) {
       i.value = max_at
     }
     filter_color.forEach(color => {
       color.classList.remove('act_block')
     })
     if (i.id == 'ot') {
+      if (parseInt(i.value) >= ot_and_do[1].value) {
+        i.value = min_at
+      }
       found_price(filter_grid)
       for (let item of filter_grid.children) {
         item.style.display = 'none'
@@ -1138,11 +1240,14 @@ ot_and_do.forEach(i => {
         som = som.innerHTML
         som = som.slice(0, -4)
         som = som.replace(/[ ,\&nbsp;]/g, '');
-        console.log(som);
         som = parseInt(som)
-        if (som >= i.value) {
+        if (som >= parseInt(ot_and_do[0].value) && som <= parseInt(ot_and_do[1].value)) {
           let k = som.toString() + ' сум'
-          if (item.children[2].lastElementChild.firstElementChild.lastElementChild.innerHTML == k) {
+          k = k.replace(/[ ,\&nbsp;]/g, '');
+          let o = item.children[2].lastElementChild.firstElementChild.lastElementChild.innerHTML
+          o = o.replace(/[ ,\&nbsp;]/g, '');
+          console.log(k, o);
+          if (o == k) {
             item.style.display = 'block'
           }
         }
@@ -1159,11 +1264,14 @@ ot_and_do.forEach(i => {
         som = som.innerHTML
         som = som.slice(0, -4)
         som = som.replace(/[ ,\&nbsp;]/g, '');
-        console.log(som);
         som = parseInt(som)
-        if (som <= i.value) {
+        if (som <= parseInt(ot_and_do[1].value) && som >= parseInt(ot_and_do[0].value)) {
           let k = som.toString() + ' сум'
-          if (item.children[2].lastElementChild.firstElementChild.lastElementChild.innerHTML == k) {
+          k = k.replace(/[ ,\&nbsp;]/g, '');
+          let o = item.children[2].lastElementChild.firstElementChild.lastElementChild.innerHTML
+          o = o.replace(/[ ,\&nbsp;]/g, '');
+          console.log(k, o);
+          if (o == k) {
             item.style.display = 'block'
           }
         }
@@ -1189,15 +1297,15 @@ otmen.onclick = () => {
   }
 }
 let menu_children = document.querySelectorAll('.menu_child')
-let katlink2 = document.querySelectorAll('.katlink2')
-for (let i = 0; i < katlink2.length; i++) {
-  katlink2[i].onclick = () => {
-    katlink[i].click()
-  }
-}
 let my_kab = document.querySelector('.may_kab')
+let poisk_page = document.querySelector('.poisk_page')
+let footer = document.querySelector('footer')
+let header_phone = document.querySelector('.header-phone')
 for (let i = 0; i < menu_children.length; i++) {
   menu_children[i].onclick = () => {
+    footer.style.display = 'flex'
+    poisk_page.style.display = 'none'
+    header_phone.classList.remove('header-phone2')
     for (let item of menu_children) {
       item.classList.remove('active-bottom-menu')
     }
@@ -1205,7 +1313,19 @@ for (let i = 0; i < menu_children.length; i++) {
     if (i == 0) {
       logo.click()
     } else if (i == 1) {
-      katlink[2].click()
+      no_tovar.style.display = 'none'
+      filter_page.style.display = 'none'
+      header_phone.classList.add('header-phone2')
+      mn1_h2.style.display = "none"
+      onsale_main.style.display = "none"
+      swiper.style.display = "none"
+      swiper2.style.display = "none"
+      menu_children[1].classList.add('active-bottom-menu')
+      cart_page.style.display = "none"
+      footer.style.display = 'none'
+      product_page.style.display = "none"
+      liked.style.display = 'none'
+      poisk_page.style.display = 'flex'
     } else if (i == 2) {
       cart_btn.click()
     } else if (i == 3) {
@@ -1243,9 +1363,105 @@ for (let i = 0; i < kab.length - 6; i++) {
 
 leave_phone_ac.onclick = () => {
   localStorage.setItem('account', 'havent')
-  localStorage.removeItem('Liked')
-  localStorage.removeItem('basket')
   setTimeout(() => {
     location.assign("/index.html")
   }, 1500)
 }
+
+
+async function change_like_sever(arr) {
+  let obj_acc = JSON.parse(localStorage.getItem('account'))
+  fetch('https://ayub-market-default-rtdb.firebaseio.com/user.json')
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      let foundObject = data.find(function (item) {
+        return item.email === obj_acc.email;
+      });
+      foundObject.liked = JSON.stringify(arr)
+      obj_acc = foundObject
+      localStorage.setItem('account', JSON.stringify(obj_acc))
+      fetch(`https://ayub-market-default-rtdb.firebaseio.com/user.json`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": 'application/json.charset=utf-8'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+    })
+}
+
+async function change_basket_sever(arr) {
+  let obj_acc = JSON.parse(localStorage.getItem('account'))
+  fetch('https://ayub-market-default-rtdb.firebaseio.com/user.json')
+    .then(res => res.json())
+    .then(data => {
+      let foundObject = data.find(function (item) {
+        return item.email === obj_acc.email;
+      });
+      foundObject.basket = JSON.stringify(arr)
+      obj_acc = foundObject
+      localStorage.setItem('account', JSON.stringify(obj_acc))
+      fetch(`https://ayub-market-default-rtdb.firebaseio.com/user.json`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": 'application/json.charset=utf-8'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+    })
+}
+let animka = document.querySelector('.animka')
+setTimeout(() => {
+  animka.style.opacity = 0
+  setTimeout(() => {
+    animka.style.display = 'none'
+  }, 1000)
+}, 3000)
+fetch('https://filter-4d40a-default-rtdb.firebaseio.com/user.json')
+  .then(res => res.json())
+  .then(data => {
+    console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      let item = data[i]
+      poisk_page.innerHTML += `<div class="kab_item2" id="${i}" style="height: 40px;">
+        ${item.img}
+        ${item.title}
+      </div>`
+    }
+    let poisk_page2 = document.querySelector('.poisk_page')
+    let katlink2 = poisk_page2.children
+    for (let i = 0; i < katlink2.length; i++) {
+      katlink2[i].onclick = () => {
+        console.log(katlink2[i].id);
+        if (katlink2[i].id == 0) {
+          katlink[1].click()
+        } else if (katlink2[i].id == 1) {
+          katlink[4].click()
+        } else if (katlink2[i].id == 2) {
+          katlink[0].click()
+        } else if (katlink2[i].id == 3) {
+          katlink[2].click()
+        } else if (katlink2[i].id == 4) {
+          katlink[3].click()
+        }
+      }
+    }
+  })
+
+let new_tovar = document.querySelectorAll('.new_tovar')
+let new_page = document.querySelector('.new_page')
+for (let item of new_tovar) {
+  item.onclick = () => {
+    if (localStorage.getItem("account") != 'havent' && localStorage.getItem("account") != null) {
+      location.assign("/new_tovar.html")
+    }else{
+      user_personals[0].click()
+    }
+  }
+}
+
+
+

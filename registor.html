@@ -101,6 +101,7 @@
       .then(res => res.json())
       .then(data => {
         arr = data
+        console.log(arr)
         let foundObject2 = arr.find(function (item) {
           return item.email === obj.email;
         });
@@ -128,7 +129,9 @@
             name: inp_text.value,
             password: inp_password.value,
             email: inp_email.value,
-            image: output.src
+            image: output.src,
+            liked: foundObject.liked,
+            basket: foundObject.basket,
           }
           let index = arr.findIndex(function (user) {
             return user.email === foundObject.email;
@@ -155,8 +158,6 @@
     }
     function leave_account() {
       localStorage.setItem('account', 'havent')
-      localStorage.removeItem('Liked')
-      localStorage.removeItem('basket')
       setTimeout(() => {
         location.assign("/index.html")
       }, 1500)
